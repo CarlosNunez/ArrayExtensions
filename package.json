@@ -7,5 +7,8 @@
 	"dependencies": {
 		"chai": "*",
 	  	"mocha": "*"
+	},
+	"scripts": {
+		"test": "mocha" 
 	}
 }
