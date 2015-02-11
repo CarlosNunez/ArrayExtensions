@@ -3,15 +3,9 @@ var chai = require('chai');
 
 chai.config.includeStack = true;
 
-assert = chai.assert;
+expect = chai.expect;
 
 describe( 'Array', function(){
-  	describe( '#indexOf()', function(){
-	    it( 'should return -1 when the value is not present', function(){
-	      assert.equal(-1, [1,2,3].indexOf(5));
-	      assert.equal(-1, [1,2,3].indexOf(0));
-	    })
-  	})
 
   	describe( '#each', function() {
   		var people = [ 
@@ -34,11 +28,12 @@ describe( 'Array', function(){
 		  	pablo = strings[1];
 		  	topo = strings[2];
 
-		  	assert.equal( strings.length, people.length );
+		  	expect(strings).to.have.length(people.length);
 
-		 	assert.equal( pedro, 'pedro is 19 years old' );
-		 	assert.equal( pablo, 'pablo is 16 years old' );
-		 	assert.equal( topo, 'topo is 18 years old' );	
+		 	expect(pedro).to.be.a('string');
+		 	expect(pedro).to.equal('pedro is 19 years old')
+		 	expect(pablo).to.equal('pablo is 16 years old')
+		 	expect(topo).to.equal('topo is 18 years old' );	
 		});
 		
   	});
@@ -65,9 +60,9 @@ describe( 'Array', function(){
 			pedro = peopleWithOOP[0].name;
 			pablo = peopleWithOOP[1].name;
 
-		 	assert.equal( peopleWithOOP.length, 2 );
-		 	assert.equal( pedro,"pedro" );
-		 	assert.equal( pablo, "pablo" );	
+		 	expect(peopleWithOOP).to.have.length(2);
+		 	expect(pedro).to.equal( "pedro" );
+		 	expect(pablo).to.equal( "pablo" );	
 	
 		});
 
@@ -82,13 +77,13 @@ describe( 'Array', function(){
 				return skill === 'PHP'
 			});
 
-			assert.equal(result, true);
+			expect(result).to.be.true;
 		});
 
 		it('Taking a string as a parameter should return true finding the defined value', function(){
 			result = juan.skills.any( 'PHP' );
 
-			assert.equal(result, true);
+			expect(result).to.be.true;
 		});
 
 		it('Taking a function as parameter should return false not finding the defined value', function(){
@@ -96,13 +91,13 @@ describe( 'Array', function(){
 				return skill === 'OOP' 
 			})
 
-			assert.equal(result, false); 
+			expect(result).to.be.false; 
 		});
 
 		it('Takin a string as parameter should return false on not finding the defined value', function(){
 			result = juan.skills.any( 'OOP' );
 
-			assert.equal(result, false);
+			expect(result).to.be.false;
 		});
 
   	});
@@ -119,10 +114,13 @@ describe( 'Array', function(){
 			names = people.select(function(dev){
 				return dev.name;
 			})
-			assert.equal(names.length, 3);
-			assert.equal(names[0], 'pedro');
-			assert.equal(names[1], 'pablo');
-			assert.equal(names[2], 'topo');
+
+			expect(names).to.have.length(3);
+
+			expect(names).to.contain('pedro');
+			expect(names).to.contain('pablo');
+			expect(names).to.contain('topo');
+
 		});
   	});
 
@@ -143,31 +141,38 @@ describe( 'Array', function(){
 			var threeChildren = [];
 			threeChildren = children.take(3);
 
-			assert.equal( threeChildren.length, 3 );
+			expect(threeChildren).to.have.length(3);
 		});
 
 		it( 'Is given 3 and a function that specifies being female as parameter all female, takes exactly 3 elements from the original array',function() {
-			var threeChildren = [];
-			threeChildren = children.take(3, function(x) {
-				return x.sex === 'f'
-			});
+			var threeChildren = [],
+			conditionFunction = function(x) {
+				return x.sex === 'f';
+			}
 
-			assert.equal( threeChildren.length, 3 );
-			assert.equal( threeChildren[0].sex, 'f' );
-			assert.equal( threeChildren[1].sex, 'f' );
-			assert.equal( threeChildren[2].sex, 'f' );
+			threeChildren = children.take(3, conditionFunction);
+
+			expect(threeChildren).to.have.length(3);
+
+			expect(threeChildren[0]).to.satisfy(conditionFunction);
+			expect(threeChildren[1]).to.satisfy(conditionFunction);
+			expect(threeChildren[2]).to.satisfy(conditionFunction);
+				
 		});	
 
 		it( 'Is given 5 and a function that specifies being male as a parameter, takes 3 elements as there are only 3 male children in the original array', function() {
-			var threeChildren = [];
-			threeChildren = children.take( 5, function(x) {
-				return x.sex === 'm'
-			});
+			var threeChildren = [],
+			conditionFunction = function(x) {
+				return x.sex === 'm';
+			}
 
-			assert.equal( threeChildren.length, 3 );
-			assert.equal( threeChildren[0].sex, 'm' );
-			assert.equal( threeChildren[1].sex, 'm' );
-			assert.equal( threeChildren[2].sex, 'm' );
+			threeChildren = children.take( 5, conditionFunction);
+
+			expect(threeChildren).to.have.length(3);
+
+			expect(threeChildren[0]).to.satisfy(conditionFunction);
+			expect(threeChildren[1]).to.satisfy(conditionFunction);
+			expect(threeChildren[2]).to.satisfy(conditionFunction);
 
 		});
   	});
@@ -186,12 +191,15 @@ describe( 'Array', function(){
 		];
 
 		it( 'Is given 3 as a paramter, resulting array skips first 3 children, resulting in an array with 6 children starting wit yadi', function() {
-			var result = [];
+			var result = [],
+			firstChild;
 
 			result = children.skip(3);
+			firstChild = result[0].name;
 
-			assert.equal( result.length, 6 );
-			assert.equal( result[0].name, 'yadi' );
+			expect(result).to.have.length(6);
+			expect(firstChild).to.equal('yadi')
+
 		});
 
 	});
@@ -213,7 +221,7 @@ describe( 'Array', function(){
 		it('Is given no arguments, returns the first element of the array', function(){
 			firstChild = children.first();
 
-			assert.equal( firstChild.name, 'ana' );
+			expect(firstChild.name).to.equal('ana');
 		});
 
 		it('Is given function that defines a condition, returns the first element that meets the condition in the array', function(){
@@ -221,7 +229,7 @@ describe( 'Array', function(){
 				return x.sex === 'm'
 			});
 
-			assert.equal( firstChild.name, 'fosto' );
+			expect(firstChild.name).to.equal( 'fosto' );
 		});
 	});
 
@@ -240,17 +248,17 @@ describe( 'Array', function(){
 		firstChild;
 
 		it('Is given no arguments, returns the last element of the array', function(){
-			firstChild = children.last();
+			lastChild = children.last();
 
-			assert.equal( firstChild.name, 'martin' );
+			expect(lastChild.name).to.equal( 'martin' );
 		});
 
 		it('Is given function that defines a condition, returns the last element that meets the condition in the array', function(){
-			firstChild = children.last( function( x ){ 
+			lastChild = children.last( function( x ){ 
 				return x.sex === 'f'
 			});
 
-			assert.equal( firstChild.name, 'auro' );
+			expect(lastChild.name).to.equal( 'auro' );
 		});
 	});
 
@@ -271,7 +279,7 @@ describe( 'Array', function(){
 		it( 'Given no parameter, returns the total count of elements', function(){
 			count = children.count();
 
-			assert.equal(count, 9)
+			expect(count).to.equal(9)
 		})
 
 		it( 'Given a function as aprameter will return the number of elements that satisfy the function condition', function(){
@@ -279,7 +287,7 @@ describe( 'Array', function(){
 				return x.sex === 'f'
 			});
 
-			assert.equal(count, 5);
+			expect(count).to.equal(5);
 		})
 	})
 
@@ -303,7 +311,7 @@ describe( 'Array', function(){
 				return x.name === 'bany';
 			})
 
-			assert.equal(index, 5);
+			expect(index).to.equal(5);
 		});
 
 		it( 'Given a function as parameter returns the -1 when no element satisfies the specification', function() {
@@ -311,13 +319,13 @@ describe( 'Array', function(){
 				return x.name === 'mark';
 			})
 
-			assert.equal(index, -1);
+			expect(index).to.equal(-1);
 		});
 
 		it( 'Given a value as parameter will return the index of the value that matches', function() {
 			index = numbers.index(7);
 
-			assert.equal(index, 3);
+			expect(index).to.equal(3);
 		});
 
 	});
@@ -333,10 +341,11 @@ describe( 'Array', function(){
 		it( 'Is given the name of a property, returns an array of said property', function(){
 			names = people.pluck('name');
 
-			assert.equal(names.length, 3);
-			assert.equal(names[0], 'pedro');
-			assert.equal(names[1], 'pablo');
-			assert.equal(names[2], 'topo');
+			expect(names).to.have.length(3);
+			expect(names).to.contain('pedro');
+			expect(names).to.contain('pablo');
+			expect(names).to.contain('topo');
+
 		});
   	});
 
@@ -353,7 +362,7 @@ describe( 'Array', function(){
 		it( 'on an array of number, given no arguents, it will add them together', function() {
 			result = numbers.sum();
 
-			assert.equal(result, 10);
+			expect(result).to.equal(10);
 		});
 
 		it( 'on an array of numbers, given a functon as argument, will sum the result of an operation defined in the function', function() {
@@ -361,7 +370,7 @@ describe( 'Array', function(){
 				return x * 2; 
 			});
 
-			assert.equal(result, 20);
+			expect(result).to.equal(20);
 		})
 
 		it( 'given a function it will sum the returned value of the function on each element', function() {
@@ -369,7 +378,7 @@ describe( 'Array', function(){
 				return person.age;
 			});
 
-			assert.equal(result, 53);
+			expect(result).to.equal(53);
 		})
 
 	});
@@ -394,14 +403,14 @@ describe( 'Array', function(){
 		it( 'on an array of numbers, given no parameters, return max value', function() { 
 			max = numbers.max();
 
-			assert.equal(max, 11);
+			expect(max).to.equal(11);
 		});
 
 		it( 'on and array of of objects, given a function as parameter return the element whose value that satisfies the function, and is the bigger one', function() {
 
 			longestNameChild = children.max(function(a, b){ return a.name.length - b.name.length }).name
 
-			assert.equal(longestNameChild, 'martin');
+			expect(longestNameChild).to.equal('martin');
 		});
 	});
 
@@ -419,20 +428,20 @@ describe( 'Array', function(){
 		],
 		numbers = [1, 3, 5, 7, 9, 11, 2, 4, 6],
 		max,
-		longestNameChild,
+		shortestNameChild,
 		oldestPerson;
 
 		it( 'on an array of numbers, given no parameters, return min value', function() { 
 			max = numbers.min();
 
-			assert.equal(max, 1);
+			expect(max).to.equal(1);
 		});
 
 		it( 'on and array of of objects, given a function as parameter return the element whose value that satisfies the function, and is the lowest one', function() {
 
-			longestNameChild = children.min(function(a, b){ return a.name.length - b.name.length }).name
+			shortestNameChild = children.min(function(a, b){ return a.name.length - b.name.length }).name
 
-			assert.equal(longestNameChild, 'ana');
+			expect(shortestNameChild).to.equal('ana');
 		});
 	});
 
@@ -443,11 +452,13 @@ describe( 'Array', function(){
 		it('on an array that contains arrays inside of it, flatten all arrays to a single array containing all values', function(){
 			flattenedArray = numbers.flatten();
 
-			assert.equal( flattenedArray.length, 16 );
-			assert.equal( flattenedArray[0], 1 );
-			assert.equal( flattenedArray[3], 4 );
-			assert.equal( flattenedArray[5], 6 );
-			assert.equal( flattenedArray[8], 9 );	
+			expect(flattenedArray).to.have.length(16);
+
+			expect(flattenedArray).to.contain(1);
+			expect(flattenedArray).to.contain(4);
+			expect(flattenedArray).to.contain(6);
+			expect(flattenedArray).to.contain(9);
+
 		});
 		
 	})
