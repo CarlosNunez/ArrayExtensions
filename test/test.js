@@ -254,7 +254,7 @@ describe( 'Array', function(){
 		});
 	});
 
-	describe('#count', function(){
+	describe( '#count', function(){
 		var children = [
 		    {name: 'ana', sex: 'f'},
 		    {name: 'fosto', sex: 'm'},
@@ -268,13 +268,13 @@ describe( 'Array', function(){
 		],
 		count;
 
-		it('Given no parameter, returns the total count of elements', function(){
+		it( 'Given no parameter, returns the total count of elements', function(){
 			count = children.count();
 
 			assert.equal(count, 9)
 		})
 
-		it('Given a function as aprameter will return the number of elements that satisfy the function condition', function(){
+		it( 'Given a function as aprameter will return the number of elements that satisfy the function condition', function(){
 			count = children.count( function(x) { 
 				return x.sex === 'f'
 			});
@@ -306,7 +306,7 @@ describe( 'Array', function(){
 			assert.equal(index, 5);
 		});
 
-		it('Given a function as parameter returns the -1 when no element satisfies the specification', function() {
+		it( 'Given a function as parameter returns the -1 when no element satisfies the specification', function() {
 			index = children.index( function(x) {
 				return x.name === 'mark';
 			})
@@ -314,7 +314,7 @@ describe( 'Array', function(){
 			assert.equal(index, -1);
 		});
 
-		it('Given a value as parameter will return the index of the value that matches', function() {
+		it( 'Given a value as parameter will return the index of the value that matches', function() {
 			index = numbers.index(7);
 
 			assert.equal(index, 3);
@@ -328,9 +328,9 @@ describe( 'Array', function(){
 		    {name: 'pablo', age: 16 },
 		    {name: 'topo', age: 18 }
 		],
-		names= [];
+		names = [];
 
-		it('Is given the name of a property, returns an array of said property', function(){
+		it( 'Is given the name of a property, returns an array of said property', function(){
 			names = people.pluck('name');
 
 			assert.equal(names.length, 3);
@@ -340,5 +340,115 @@ describe( 'Array', function(){
 		});
   	});
 
+	describe( '#sum', function() { 
+		var numbers = [3,2,1,4],
+		strings = ['3','2','1','4'],
+  		people = [ 
+		    {name: 'pedro', age: 19 },
+		    {name: 'pablo', age: 16 },
+		    {name: 'topo', age: 18 }
+		],
+		sum;
 
+		it( 'on an array of number, given no arguents, it will add them together', function() {
+			result = numbers.sum();
+
+			assert.equal(result, 10);
+		});
+
+		it( 'on an array of numbers, given a functon as argument, will sum the result of an operation defined in the function', function() {
+			result = strings.sum( function(x) {
+				return x * 2; 
+			});
+
+			assert.equal(result, 20);
+		})
+
+		it( 'given a function it will sum the returned value of the function on each element', function() {
+			result = people.sum( function( person ) {
+				return person.age;
+			});
+
+			assert.equal(result, 53);
+		})
+
+	});
+
+	describe( '#max', function() {
+		var children = [
+		    {name: 'ana', sex: 'f'},
+		    {name: 'fosto', sex: 'm'},
+		    {name: 'jane', sex: 'f'},
+		    {name: 'yadi', sex: 'f'},
+		    {name: 'lili', sex: 'f'},
+		    {name: 'bany', sex: 'm'},
+		    {name: 'rod', sex: null},
+		    {name: 'auro', sex: 'f'},
+		    {name: 'martin', sex: 'm'}
+		],
+		numbers = [1, 3, 5, 7, 9, 11, 2, 4, 6],
+		max,
+		longestNameChild,
+		oldestPerson;
+
+		it( 'on an array of numbers, given no parameters, return max value', function() { 
+			max = numbers.max();
+
+			assert.equal(max, 11);
+		});
+
+		it( 'on and array of of objects, given a function as parameter return the element whose value that satisfies the function, and is the bigger one', function() {
+
+			longestNameChild = children.max(function(a, b){ return a.name.length - b.name.length }).name
+
+			assert.equal(longestNameChild, 'martin');
+		});
+	});
+
+	describe( '#min', function() {
+		var children = [
+		    {name: 'ana', sex: 'f'},
+		    {name: 'fosto', sex: 'm'},
+		    {name: 'jane', sex: 'f'},
+		    {name: 'yadi', sex: 'f'},
+		    {name: 'lili', sex: 'f'},
+		    {name: 'bany', sex: 'm'},
+		    {name: 'rod', sex: null},
+		    {name: 'auro', sex: 'f'},
+		    {name: 'martin', sex: 'm'}
+		],
+		numbers = [1, 3, 5, 7, 9, 11, 2, 4, 6],
+		max,
+		longestNameChild,
+		oldestPerson;
+
+		it( 'on an array of numbers, given no parameters, return min value', function() { 
+			max = numbers.min();
+
+			assert.equal(max, 1);
+		});
+
+		it( 'on and array of of objects, given a function as parameter return the element whose value that satisfies the function, and is the lowest one', function() {
+
+			longestNameChild = children.min(function(a, b){ return a.name.length - b.name.length }).name
+
+			assert.equal(longestNameChild, 'ana');
+		});
+	});
+
+	describe( '#flatten', function() {
+		var numbers = [1,2,3,[4,5,[6, 7, 8], 9, 10, 11, 12, 13, 14], 15, 16],
+		flattenedArray;
+
+		it('on an array that contains arrays inside of it, flatten all arrays to a single array containing all values', function(){
+			flattenedArray = numbers.flatten();
+
+			assert.equal( flattenedArray.length, 16 );
+			assert.equal( flattenedArray[0], 1 );
+			assert.equal( flattenedArray[3], 4 );
+			assert.equal( flattenedArray[5], 6 );
+			assert.equal( flattenedArray[8], 9 );	
+		});
+		
+	})
 })
